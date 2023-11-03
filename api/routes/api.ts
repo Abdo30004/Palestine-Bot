@@ -30,10 +30,11 @@ api.get("/check", async (req, res) => {
 api.get("/news/:id", async (req, res) => {
   let number = parseInt(req.query.number as string) || 10;
   let search = req.query.search as string | undefined;
+  let lang = req.query.lang as string | undefined;
   let news = null;
   switch (req.params.id) {
     case "aljazeera":
-      news = await getAljazeeraNews(number, search);
+      news = await getAljazeeraNews(number,lang, search);
       break;
     case "qassambrigades":
       news = await getQassamNews(number, search);

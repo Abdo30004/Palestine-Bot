@@ -37,9 +37,9 @@ function pharseArticle(article: any): Article {
   };
 }
 
-let scraper = async (q: number, o: number) => {
-  let url = `https://www.aljazeera.net/graphql?wp-site=aja&operationName=ArchipelagoAjeSectionPostsQuery&variables={"category":"palestine","categoryType":"where","postTypes":["post","video"],"quantity":${q},"offset":${o}}&extensions={}`;
-
+let scraper = async (q: number, o: number, lang?: string) => {
+  let prefix = lang === "en" ? "aje" : "aja";
+  let url = `https://www.aljazeera.net/graphql?wp-site=${prefix}&operationName=ArchipelagoAjeSectionPostsQuery&variables={"category":"palestine","categoryType":"where","postTypes":["post","video"],"quantity":${q},"offset":${o}}&extensions={}`;
   let response = await axios
     .get(encodeURI(url), {
       headers: {
@@ -48,7 +48,7 @@ let scraper = async (q: number, o: number) => {
         "Original-Domain": "www.aljazeera.net",
         "User-Agent":
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36 Edg/118.0.2088.76",
-        "Wp-Site": "aja",
+        "Wp-Site": `${prefix}`,
       },
     })
     .catch((e) => e.response);
@@ -59,10 +59,10 @@ let scraper = async (q: number, o: number) => {
   return articles;
 };
 
-async function getAljazeeraNews(n: number, search?: string) {
+async function getAljazeeraNews(n: number, lang?: string, search?: string) {
   let q = Math.min(n, 100);
   let offsets = splitN(n);
-  let articles = await Promise.all(offsets.map((o) => scraper(q, o)));
+  let articles = await Promise.all(offsets.map((o) => scraper(q, o, lang)));
   let news = articles
     .flat()
     .map(pharseArticle)
@@ -75,6 +75,5 @@ async function getAljazeeraNews(n: number, search?: string) {
     );
   return news;
 }
-
 export default getAljazeeraNews;
 export { getAljazeeraNews };
