@@ -1,6 +1,3 @@
-
-
-
 interface Article {
   id: string;
   title: string;
@@ -11,9 +8,8 @@ interface Article {
     url: string | null;
     caption: string | null;
   };
+  source: string;
   date: Date;
 }
-
-
 
 export { Article };

@@ -148,13 +148,14 @@ class Client extends DiscordClient {
 
       let article: Article = {
         id: `qassam-${message.id}`,
-        title: message.text || "لا توجد كتابة",
+        title: "رسالة من قناة كتائب القسام",
         link: `https://t.me/qassambrigades/${message.id}`,
-        description: null,
+        description: message.text,
         image: {
-          caption: null,
-          url: null,
+          caption: "كتائب القسام",
+          url: "https://upload.wikimedia.org/wikipedia/ar/5/53/Alqassam.jpg",
         },
+        source: "qassambrigades",
         date: new Date(message.date * 1000),
       };
 

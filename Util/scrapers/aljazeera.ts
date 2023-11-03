@@ -32,6 +32,7 @@ function pharseArticle(article: any): Article {
         unescapeHTML(article.featuredImage.alt) ||
         null,
     },
+    source: "aljazeera",
     date: new Date(article.date),
   };
 }
@@ -58,13 +59,21 @@ let scraper = async (q: number, o: number) => {
   return articles;
 };
 
-async function getAljazeeraNews(n: number) {
+async function getAljazeeraNews(n: number, search?: string) {
   let q = Math.min(n, 100);
   let offsets = splitN(n);
   let articles = await Promise.all(offsets.map((o) => scraper(q, o)));
-  let news = articles.flat();
-  fs.writeFile("./news.json", JSON.stringify(news, null, 2));
-  return news.map(pharseArticle);
+  let news = articles
+    .flat()
+    .map(pharseArticle)
+    .filter((a) =>
+      search
+        ? a.title.includes(search) ||
+          a.description?.includes(search) ||
+          a.image.caption?.includes(search)
+        : true
+    );
+  return news;
 }
 
 export default getAljazeeraNews;

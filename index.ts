@@ -41,6 +41,9 @@ client.start({
   },
 });
 
+export default client;
+export { client };
+
 process.on("unhandledRejection", (err) => {
   console.log(err);
 });

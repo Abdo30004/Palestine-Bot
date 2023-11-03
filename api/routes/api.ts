@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { getAljazeeraNews } from "../../Util/scrapers/aljazeera";
+import { getQassamNews } from "../../Util/scrapers/qassamtl";
 import { checkCompany, getSuggetions } from "../../Util/scrapers/bdnaash";
 const api = Router();
 
@@ -26,13 +27,35 @@ api.get("/check", async (req, res) => {
   });
 });
 
-api.get("/news/aljazeera", async (req, res) => {
-  let n = parseInt(req.query.number as string) || 10;
-  let news = await getAljazeeraNews(n).catch((err) => null);
-  if (!news) {
+api.get("/news/:id", async (req, res) => {
+  let number = parseInt(req.query.number as string) || 10;
+  let search = req.query.search as string | undefined;
+  let news = null;
+  switch (req.params.id) {
+    case "aljazeera":
+      news = await getAljazeeraNews(number, search);
+      break;
+    case "qassambrigades":
+      news = await getQassamNews(number, search);
+      break;
+    default:
+      res
+        .status(404)
+        .json({ message: "Source not found, use aljazeera/qassambrigades" });
+      return;
+  }
+
+  if (!news.length && !search) {
+    res.status(404).json({ message: "No news found" });
+
+    return;
+  }
+
+  if (!news.length) {
     res.status(500).json({ message: "Error while fetching news" });
     return;
   }
+
   res.json(news);
 });
 

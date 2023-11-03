@@ -10,15 +10,16 @@ let event: Event = {
     console.log(`${client.user?.tag} is ready!`);
 
     let SentNewsIds: string[] = [];
-
+    /*
     setInterval(async () => {
       let news = await getAljazeeraNews(10);
       news = news.filter((n) => !SentNewsIds.includes(n.id));
+      if (!news.length) return;
 
       client.events.emit("news", news);
 
       SentNewsIds.push(...news.map((n) => n.id));
-    }, 5000);
+    }, 5000);*/
   },
 };
 
