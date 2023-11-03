@@ -11,6 +11,8 @@ import { cwd } from "process";
 
 import { Event } from "../interfaces/event";
 import { Command } from "../interfaces/command";
+import { TLClient } from "./telegram";
+import type { TLOptions } from "./telegram";
 
 import { Logger } from "../Util/logger";
 import { EmbedMaker } from "../Util/embed";
@@ -27,6 +29,7 @@ interface StartOptions {
     port: number;
   };
   debug: boolean;
+  telegram: TLOptions;
 }
 
 class Client extends DiscordClient {
@@ -35,12 +38,14 @@ class Client extends DiscordClient {
 
   public config: typeof config = config;
   public embed: EmbedMaker = new EmbedMaker();
+  public tlClient: TLClient | null = null;
 
   public cache: GuildType[] = [];
 
   constructor(options: ClientOptions) {
     super(options);
     this.path = cwd();
+    this.tlClient = null;
   }
 
   public async updateCache() {
@@ -151,6 +156,8 @@ class Client extends DiscordClient {
   }
   async start(options: StartOptions): Promise<boolean> {
     try {
+      this.tlClient = new TLClient(options.telegram);
+      await this.tlClient.init();
       await this.registerEvents(options.eventsDir, options.debug);
       await this.registerCommands(options.commandsDir, options.debug);
       await connect(options.mongodbUri);
