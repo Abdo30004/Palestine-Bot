@@ -22,6 +22,7 @@ class TLClient extends TelegramClient {
       options.apiHash,
       params || {}
     );
+
     super.setLogLevel(LogLevel.NONE);
     this.options = options;
   }

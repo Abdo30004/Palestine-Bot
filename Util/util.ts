@@ -8,11 +8,12 @@ class Util {
     });
   }
 
-  static generateUniqueID() {
-    return Math.random().toString(36).substr(2, 9);
+  static wait(ms: number) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms);
+    });
   }
 }
 
-console.log(Util.generateUniqueID());
 export default Util;
 export { Util };

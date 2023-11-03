@@ -1,5 +1,7 @@
 import { Event } from "../interfaces/event";
-import { ChannelType } from "discord.js";
+
+import { getAljazeeraNews } from "../Util/scrapers/aljazeera";
+
 let event: Event = {
   name: "ready",
 
@@ -7,19 +9,15 @@ let event: Event = {
     await client.updateCache();
     console.log(`${client.user?.tag} is ready!`);
 
-    setInterval(async () => {
-      let newNews = true;
-      if (!newNews) return;
+    let SentNewsIds: string[] = [];
 
-      for (let guildSettings of client.cache) {
-        let guild = client.guilds.cache.get(guildSettings._id);
-        if (!guild) continue;
-        let newsChannel = guild.channels.cache.get(
-          guildSettings.settings.newsChannel
-        );
-        if (!newsChannel || newsChannel.type) return;
-        await newsChannel.send("New News!");
-      }
+    setInterval(async () => {
+      let news = await getAljazeeraNews(10);
+      news = news.filter((n) => !SentNewsIds.includes(n.id));
+
+      client.events.emit("news", news);
+
+      SentNewsIds.push(...news.map((n) => n.id));
     }, 5000);
   },
 };

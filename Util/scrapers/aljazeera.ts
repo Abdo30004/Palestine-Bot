@@ -1,18 +1,7 @@
 import fs from "fs/promises";
 import axios from "axios";
 import { load } from "cheerio";
-
-interface Article {
-  title: string;
-  description: string;
-  link: string;
-
-  image: {
-    url: string | null;
-    caption: string | null;
-  };
-  date: Date;
-}
+import { Article } from "../../interfaces/article";
 
 function unescapeHTML(html: string) {
   return load(html).text();
@@ -32,6 +21,7 @@ function splitN(n: number): number[] {
 function pharseArticle(article: any): Article {
   let baseUrl = "https://www.aljazeera.net";
   return {
+    id: `aljazeera-{article.id}`,
     title: unescapeHTML(article.title),
     description: unescapeHTML(article.excerpt),
     link: baseUrl + article.link,
@@ -73,13 +63,9 @@ async function getAljazeeraNews(n: number) {
   let offsets = splitN(n);
   let articles = await Promise.all(offsets.map((o) => scraper(q, o)));
   let news = articles.flat();
+  fs.writeFile("./news.json", JSON.stringify(news, null, 2));
   return news.map(pharseArticle);
 }
-
-getAljazeeraNews(1500).then(async (news) => {
-  news= news.filter(n=>n.date.getTime() >= new Date("2023-10-06").getTime())
-  await fs.writeFile("./news.json", JSON.stringify(news, null, 2));
-});
 
 export default getAljazeeraNews;
 export { getAljazeeraNews };
