@@ -75,5 +75,11 @@ async function getAljazeeraNews(n: number) {
   let news = articles.flat();
   return news.map(pharseArticle);
 }
+
+getAljazeeraNews(1500).then(async (news) => {
+  news= news.filter(n=>n.date.getTime() >= new Date("2023-10-06").getTime())
+  await fs.writeFile("./news.json", JSON.stringify(news, null, 2));
+});
+
 export default getAljazeeraNews;
 export { getAljazeeraNews };
