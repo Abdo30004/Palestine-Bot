@@ -1,20 +1,6 @@
 import { Event } from "../interfaces/event";
 import { BaseInteraction } from "discord.js";
-import axios from "axios";
-//import { Util } from "../Util/util";
-async function getSuggetions(name: string): Promise<string[]> {
-  let params = new URLSearchParams();
-  params.append("query", name);
-  let response = await axios
-    .post(`https://bdnaash.com/home/searchSuggestions`, params, {
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-        "x-requested-with": "XMLHttpRequest",
-      },
-    })
-    .catch((e) => e.response);
-  return response?.data?.data?.map((d: any) => d.title) || [];
-}
+import { getSuggetions } from "../Util/scrapers/bdnaash";
 let event: Event = {
   name: "interactionCreate",
   async run(client, interaction: BaseInteraction) {
