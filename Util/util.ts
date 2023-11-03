@@ -7,6 +7,12 @@ class Util {
       return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
     });
   }
+
+  static generateUniqueID() {
+    return Math.random().toString(36).substr(2, 9);
+  }
 }
+
+console.log(Util.generateUniqueID());
 export default Util;
 export { Util };
