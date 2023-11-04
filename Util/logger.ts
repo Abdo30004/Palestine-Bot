@@ -29,7 +29,7 @@ class Logger {
     console.log(
       `${chalk.green.underline.bold("Api Request:")} ${chalk.red.bold(
         req.method
-      )} ${chalk.red.bold(req.path)} from ${chalk.red.bold(req.ip)}`
+      )} ${chalk.red.bold(req.url)} from ${chalk.red.bold(req.ip)}`
     );
     next();
   }

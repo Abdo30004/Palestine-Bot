@@ -10,11 +10,12 @@ let event: Event = {
       await interaction.reply({
         content: "The command you are trying to execute does not exist!",
         ephemeral: true,
+      
       });
       return;
     }
     if (command.defer) {
-      await interaction.deferReply({ ephemeral: command.ephemeral });
+      await interaction.deferReply({ ephemeral: command.ephemeral, fetchReply: true });
     }
     try {
       await command.run(client, interaction);
