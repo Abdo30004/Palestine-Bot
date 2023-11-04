@@ -160,7 +160,9 @@ class Client extends DiscordClient {
           language === "ar"
             ? "رسالة من قناة كتائب القسام"
             : "Message from Qassam Brigades",
-        link: `https://t.me/qassambrigades/${message.id}`,
+        link: `https://t.me/${sender.username || "qassambrigades"}/${
+          message.id
+        }`,
         description: message.text,
         image: {
           caption: language === "ar" ? "كتائب القسام" : "Qassam Brigades",

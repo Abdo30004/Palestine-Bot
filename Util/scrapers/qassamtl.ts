@@ -23,7 +23,7 @@ async function getQassamNews(
         lang === "ar"
           ? "رسالة من قناة كتائب القسام"
           : "Message from Qassam Brigades",
-      link: `https://t.me/qassambrigades/${message.id}`,
+      link: `https://t.me/${channel}/${message.id}`,
       description: message.text,
       image: {
         url: "https://upload.wikimedia.org/wikipedia/ar/5/53/Alqassam.jpg",
