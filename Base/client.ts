@@ -99,7 +99,7 @@ class Client extends DiscordClient {
     try {
       let events = await this.readDir<Event>(dir);
       for (let event of events) {
-        if (!event.subEvent && event.name !== "news")
+        if (!event.subEvent && event.name !== "news" && event.name !== "pray")
           this.on(event.name, event.run.bind(null, this));
         else this.events.on(event.name, event.run.bind(null, this));
         if (debug) Logger.logEventRegistered(event);

@@ -4,6 +4,7 @@ import {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
+  Colors,
 } from "discord.js";
 import axios from "axios";
 import { message } from "telegram/client";
@@ -33,6 +34,7 @@ class Util {
             text: `Source ${article.source.name}`,
             iconURL: article.source.logo,
           })
+          .setColor(Colors.Red)
           .setTimestamp(new Date(article.date)),
       ],
       components: [
@@ -58,7 +60,7 @@ class Util {
 
     if (search) url += `&search=${search}`;
     let response = await axios.get(url).catch((err) => null);
-  
+
     if (!response) return [];
     let articles: Article[] = response.data;
     return articles.filter((c) => c.description);

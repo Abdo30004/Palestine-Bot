@@ -27,6 +27,10 @@ api.get("/check", async (req, res) => {
   });
 });
 
+api.get("/pray", async (req, res) => {
+  
+});
+
 api.get("/news", async (req, res) => {
   let number = parseInt(req.query.number as string) || 10;
   let search = req.query.search as string | undefined;
