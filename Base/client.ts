@@ -58,7 +58,7 @@ class Client extends DiscordClient {
   public async updateCache() {
     this.cache = (await Guild.find({})).map((g) => ({
       ...g.toJSON(),
-      sentNews: [],
+      sentNews: this.cache.find((c) => c._id === g._id)?.sentNews || [],
     }));
   }
 

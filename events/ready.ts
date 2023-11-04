@@ -7,7 +7,7 @@ let event: Event = {
   run: async (client) => {
     await client.updateCache();
     console.log(`${client.user?.tag} is ready!`);
-
+    client.events.emit("pray");
     setInterval(async () => {
       for (let lang of ["ar", "en"]) {
         let articles: Article[] = await Util.getNews("aljazeera", lang, 10);

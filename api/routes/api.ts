@@ -2,6 +2,7 @@ import { Router } from "express";
 import { getAljazeeraNews } from "../../Util/scrapers/aljazeera";
 import { getQassamNews } from "../../Util/scrapers/qassamtl";
 import { checkCompany, getSuggetions } from "../../Util/scrapers/bdnaash";
+import { Data } from "../../database/prayData";
 const api = Router();
 
 api.get("/", (req, res) => {
@@ -28,7 +29,15 @@ api.get("/check", async (req, res) => {
 });
 
 api.get("/pray", async (req, res) => {
-  
+  let randomPray =
+    Data.prayers[Math.floor(Math.random() * Data.prayers.length)];
+  let randomPicture =
+    Data.pictures[Math.floor(Math.random() * Data.pictures.length)];
+
+  res.json({
+    pray: randomPray,
+    picture: randomPicture,
+  });
 });
 
 api.get("/news", async (req, res) => {
