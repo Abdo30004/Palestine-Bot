@@ -11,6 +11,23 @@ let command: Command = {
 
     .setName("setup")
     .setDescription("setup the bot for your server")
+    .addStringOption((option) =>
+      option
+        .setName("language")
+        .setDescription("The language of the news")
+        .addChoices(
+          ...[
+            {
+              name: "English",
+              value: "en",
+            },
+            {
+              name: "Arabic",
+              value: "ar",
+            },
+          ]
+        )
+    )
     .addChannelOption((option) =>
       option
         .addChannelTypes(ChannelType.GuildAnnouncement, ChannelType.GuildText)
@@ -25,6 +42,13 @@ let command: Command = {
           "The channel where the bot will send reminders to pray for Palestine"
         )
     )
+    .addBooleanOption((option) =>
+      option.setName("news-sending").setDescription("news sending on/off")
+    )
+    .addBooleanOption((option) =>
+      option.setName("pray-sending").setDescription("pray sending on/off")
+    )
+
     .setDMPermission(false)
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
   defer: true,
@@ -34,9 +58,16 @@ let command: Command = {
       (k) =>
         interaction.options.data.find((o) => o.name === k)?.channel?.id || null
     );
-    if (!newsChannelId && !prayChannelId) {
+    let language = `${
+      interaction.options.data.find((o) => o.name === "language")?.value
+    }`;
+    let [newsSending, praySending] = ["news-sending", "pray-sending"].map((k) =>
+      Boolean(interaction.options.data.find((o) => o.name === k)?.value)
+    );
+
+    if (!newsChannelId && !prayChannelId && !language) {
       await interaction.editReply(
-        "Please provide a Palestine News Channel or/and a Pray Channel"
+        "Please provide a Palestine News Channel or/and a Pray Channel and/or a language and/or news/pray sending on/off"
       );
       return true;
     }
@@ -57,6 +88,13 @@ let command: Command = {
 
     if (newsChannel) data.settings.newsChannel = newsChannel.id;
     if (prayChannel) data.settings.prayChannel = prayChannel.id;
+
+    console.log(newsSending, praySending);
+
+    if (newsSending) data.enabled.news = newsSending;
+    if (praySending) data.enabled.pray = praySending;
+    if (language === "ar" || language === "en")
+      data.settings.language = language;
     await data.save();
 
     await interaction.editReply({
@@ -64,16 +102,45 @@ let command: Command = {
         client.embed
           .make({
             title: `Guild ${interaction.guild?.name} setup`,
-            description: `News Channel: ${
-              newsChannel?.toString() || "None"
-            }\n\nPray Channel: ${prayChannel?.toString() || "None"}`,
+            fields: [
+              {
+                name: "News Channel",
+                value: newsChannel
+                  ? `<#${newsChannel.id}>`
+                  : "Not set, please set it using `/setup`",
+              },
+              {
+                name: "News Sending",
+                value: newsSending ? "On" : "Off",
+              },
+
+              {
+                name: "Pray Channel",
+                value: prayChannel
+                  ? `<#${prayChannel.id}>`
+                  : "Not set, please set it using `/setup`",
+              },
+              {
+                name: "Pray Sending",
+                value: praySending ? "On" : "Off",
+              },
+              {
+                name: "Language",
+                value: language
+                  ? language === "en"
+                    ? "English 🇬🇧"
+                    : "Arabic 🇵🇸"
+                  : "Not set, please set it using `/setup`",
+              },
+            ],
           })
-          .author(interaction.user),
+          .author(interaction.user)
+          .color("Gold"),
       ],
     });
 
     await client.updateCache();
-    
+
     return true;
   },
 };

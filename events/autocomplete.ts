@@ -5,7 +5,7 @@ let event: Event = {
   name: "interactionCreate",
   async run(client, interaction: BaseInteraction) {
     if (!interaction.isAutocomplete()) return;
-    if (interaction.commandName !== "check") return;
+    if (interaction.commandName !== "check-company") return;
 
     let query = `${
       interaction.options.data.find((o) => o.name === "company")?.value
@@ -14,9 +14,7 @@ let event: Event = {
     if (!query) return;
     let suggetions = await getSuggetions(query);
 
-    await interaction.respond(
-      suggetions.map((s) => ({ name: s, value: s }))
-    );
+    await interaction.respond(suggetions.map((s) => ({ name: s, value: s })));
   },
 };
 

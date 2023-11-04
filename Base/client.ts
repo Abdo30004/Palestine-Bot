@@ -34,7 +34,9 @@ interface StartOptions {
   debug: boolean;
   telegram: TLOptions;
 }
-
+interface GuildsCache extends GuildType {
+  sentNews: string[];
+}
 class Client extends DiscordClient {
   public path: string;
   public commands: Collection<string, Command> = new Collection();
@@ -45,7 +47,7 @@ class Client extends DiscordClient {
   public embed: EmbedMaker = new EmbedMaker();
   public tlClient: TLClient | null = null;
 
-  public cache: GuildType[] = [];
+  public cache: GuildsCache[] = [];
 
   constructor(options: ClientOptions) {
     super(options);
@@ -54,7 +56,10 @@ class Client extends DiscordClient {
   }
 
   public async updateCache() {
-    this.cache = await Guild.find({});
+    this.cache = (await Guild.find({})).map((g) => ({
+      ...g.toJSON(),
+      sentNews: [],
+    }));
   }
 
   protected async readDir<T>(dir: string): Promise<T[]> {
@@ -146,21 +151,31 @@ class Client extends DiscordClient {
 
       if (!("username" in sender)) return;
 
+      let language: "ar" | "en" =
+        sender.username === "qassambrigades" ? "ar" : "en";
+
       let article: Article = {
         id: `qassam-${message.id}`,
-        title: "رسالة من قناة كتائب القسام",
+        title:
+          language === "ar"
+            ? "رسالة من قناة كتائب القسام"
+            : "Message from Qassam Brigades",
         link: `https://t.me/qassambrigades/${message.id}`,
         description: message.text,
         image: {
-          caption: "كتائب القسام",
+          caption: language === "ar" ? "كتائب القسام" : "Qassam Brigades",
           url: "https://upload.wikimedia.org/wikipedia/ar/5/53/Alqassam.jpg",
         },
-        source: "qassambrigades",
+        source: {
+          language: language,
+          logo: "https://upload.wikimedia.org/wikipedia/ar/5/53/Alqassam.jpg",
+          name: "qassambrigades",
+        },
         date: new Date(message.date * 1000),
       };
 
-      this.events.emit("news", [article]);
-    }, new NewMessage({ incoming: true, fromUsers: ["qassambrigades", "yahiaouiabderrahamne"] }));
+      this.events.emit("news", [article], language);
+    }, new NewMessage({ incoming: true, fromUsers: ["qassambrigades", "qassambrigadeseng", "yahiaouiabderrahamne"] }));
     return true;
   }
 

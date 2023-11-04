@@ -1,9 +1,14 @@
 import client from "../../index";
 import { Article } from "../../interfaces/article";
 
-async function getQassamNews(n: number, search?: string): Promise<Article[]> {
+async function getQassamNews(
+  n: number,
+  lang: "ar" | "en",
+  search?: string
+): Promise<Article[]> {
+  let channel = lang === "en" ? "qassambrigadeseng" : "qassambrigades";
   let messages = await client.tlClient
-    ?.getMessages("qassambrigades", {
+    ?.getMessages(channel, {
       limit: n,
       search,
     })
@@ -11,20 +16,29 @@ async function getQassamNews(n: number, search?: string): Promise<Article[]> {
 
   if (!messages) return [];
 
-  let articles: Article[] = messages.map((message) => {
+  let articles: Article[] | null = messages.map((message, i) => {
     return {
       id: `qassambrigades-${message.id}`,
-      title: "رسالة من قناة كتائب القسام",
+      title:
+        lang === "ar"
+          ? "رسالة من قناة كتائب القسام"
+          : "Message from Qassam Brigades",
       link: `https://t.me/qassambrigades/${message.id}`,
       description: message.text,
       image: {
         url: "https://upload.wikimedia.org/wikipedia/ar/5/53/Alqassam.jpg",
-        caption: "كتائب القسام",
+        caption: lang === "ar" ? "كتائب القسام" : "Qassam Brigades",
       },
-      source: "qassambrigades",
+      source: {
+        name: "qassambrigades",
+        logo: "https://upload.wikimedia.org/wikipedia/ar/5/53/Alqassam.jpg",
+        language: lang,
+      },
       date: new Date(message.date * 1000),
     };
   });
+
+  if (!articles) return [];
 
   return articles;
 }

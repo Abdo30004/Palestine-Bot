@@ -14,7 +14,7 @@ for (let route of routes) {
 }
 
 app.get("/", (_req, res) => {
-  throw new Error("Hello World");
+  
   res.status(200).json({ message: "Hello World" });
 });
 

@@ -4,7 +4,7 @@ import { checkCompany } from "../Util/scrapers/bdnaash";
 
 let command: Command = {
   data: new SlashCommandBuilder()
-    .setName("check")
+    .setName("check-company")
     .setDescription("check if a company must be boycotted (support israel)")
     .setDMPermission(false)
     .addStringOption((option) =>
@@ -35,3 +35,6 @@ let command: Command = {
 };
 export default command;
 export { command };
+  
+  
+

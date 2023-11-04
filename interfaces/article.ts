@@ -8,7 +8,11 @@ interface Article {
     url: string | null;
     caption: string | null;
   };
-  source: string;
+  source: {
+    name: string;
+    logo: string;
+    language: "ar" | "en";
+  };
   date: Date;
 }
 

@@ -5,6 +5,11 @@ interface Guild {
   settings: {
     newsChannel: string;
     prayChannel: string;
+    language: "ar" | "en";
+  };
+  enabled: {
+    news: boolean;
+    pray: boolean;
   };
 }
 
@@ -21,6 +26,20 @@ const GuildSchema = new Schema<Guild>(
       prayChannel: {
         type: String,
         default: null,
+      },
+      language: {
+        type: String,
+        default: "en",
+      },
+    },
+    enabled: {
+      news: {
+        type: Boolean,
+        default: false,
+      },
+      pray: {
+        type: Boolean,
+        default: false,
       },
     },
   },

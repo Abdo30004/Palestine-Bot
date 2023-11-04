@@ -1,4 +1,4 @@
-import fs from "fs/promises";
+import fs from "fs";
 import axios from "axios";
 import { load } from "cheerio";
 import { Article } from "../../interfaces/article";
@@ -18,10 +18,16 @@ function splitN(n: number): number[] {
   return arr;
 }
 
-function pharseArticle(article: any): Article {
-  let baseUrl = "https://www.aljazeera.net";
+function pharseArticle(article: any, lang: "ar" | "en"): Article {
+  let prefix = lang === "en" ? "aje" : "aja";
+  let baseUrl = `https://www.aljazeera.${lang === "ar" ? "net" : "com"}`;
+
+  let enLogo =
+    "https://scontent.falg6-1.fna.fbcdn.net/v/t39.30808-1/305816850_10161001009408690_771136011521720849_n.jpg?stp=dst-jpg_p200x200&_nc_cat=1&ccb=1-7&_nc_sid=5f2048&_nc_ohc=gw-l4tSXSVEAX-1TQHV&_nc_ht=scontent.falg6-1.fna&oh=00_AfA5kTutJl95y9bczU_pAGTmH7CrB3AWAxJYQIKR87JJjw&oe=654AA133";
+  let arLogo =
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3eJ2pAs2dyd3GqsbWOmLFkho6ITObHXcK3lfzq-MSZVTf-4-ePS4Wm9TgXIcJaW-wkfU&usqp=CAU";
   return {
-    id: `aljazeera-{article.id}`,
+    id: `aljazeera-${lang}-${article.id}`,
     title: unescapeHTML(article.title),
     description: unescapeHTML(article.excerpt),
     link: baseUrl + article.link,
@@ -32,20 +38,26 @@ function pharseArticle(article: any): Article {
         unescapeHTML(article.featuredImage.alt) ||
         null,
     },
-    source: "aljazeera",
+    source: {
+      name: "aljazeera-" + lang,
+      logo: lang === "ar" ? arLogo : enLogo,
+      language: lang,
+    },
     date: new Date(article.date),
   };
 }
 
-let scraper = async (q: number, o: number, lang?: string) => {
+let scraper = async (q: number, o: number, lang?: "ar" | "en") => {
+  let baseUrl = `https://www.aljazeera.${lang === "ar" ? "net" : "com"}`;
+
   let prefix = lang === "en" ? "aje" : "aja";
-  let url = `https://www.aljazeera.net/graphql?wp-site=${prefix}&operationName=ArchipelagoAjeSectionPostsQuery&variables={"category":"palestine","categoryType":"where","postTypes":["post","video"],"quantity":${q},"offset":${o}}&extensions={}`;
+  let url = `${baseUrl}/graphql?wp-site=${prefix}&operationName=ArchipelagoAjeSectionPostsQuery&variables={"category":"palestine","categoryType":"where","postTypes":["post","video"],"quantity":${q},"offset":${o}}&extensions={}`;
   let response = await axios
     .get(encodeURI(url), {
       headers: {
-        Referer: "https://www.aljazeera.net/where/palestine/",
-        authority: "www.aljazeera.net",
-        "Original-Domain": "www.aljazeera.net",
+        Referer: `${baseUrl}/where/palestine/`,
+        authority: `${baseUrl.replace("https://", "")}}`,
+        "Original-Domain": `${baseUrl.replace("https://", "")}}`,
         "User-Agent":
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36 Edg/118.0.2088.76",
         "Wp-Site": `${prefix}`,
@@ -59,13 +71,17 @@ let scraper = async (q: number, o: number, lang?: string) => {
   return articles;
 };
 
-async function getAljazeeraNews(n: number, lang?: string, search?: string) {
+async function getAljazeeraNews(
+  n: number,
+  lang?: "ar" | "en",
+  search?: string
+) {
   let q = Math.min(n, 100);
   let offsets = splitN(n);
   let articles = await Promise.all(offsets.map((o) => scraper(q, o, lang)));
   let news = articles
     .flat()
-    .map(pharseArticle)
+    .map((a) => pharseArticle(a, lang || "en"))
     .filter((a) =>
       search
         ? a.title.includes(search) ||
