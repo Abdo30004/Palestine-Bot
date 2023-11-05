@@ -4,7 +4,6 @@
 
 This is a discord bot project,linked to a web api that scrap data from news websites (Aljazeera en/ar) and also from the official Al-Qassam Brigades Telegram channel and post them in a discord channel (Automatic process).
 
-
 ### How it works
 
 - The bot is connected to a discord client that recieve commands from the users, also it sends messages to a discord channels
@@ -46,11 +45,9 @@ This is a discord bot project,linked to a web api that scrap data from news webs
 - `telegramPhone` : Telegram Account phone number (for the telegram client)
 - `telegramSession` : Telegram Session string (for the telegram client , to avoid login every time using AuthCode)
 
-
 ## AI Part
+
 Fake News Detection Project with BERT Fine-tuning
 
-
-
-
-
+- [Colab](https://colab.research.google.com/drive/1v9aUHNXzhW3jYxHzN8yq_c5pEqtzSDWB?usp=sharing)
+- [DataSet](https://cdn.discordapp.com/attachments/1154793323429634170/1170492155043774475/new-data.json?ex=65593cc4&is=6546c7c4&hm=f3e73060acd0adc5ba32da870a1fde2bbcb74771640315addb63b4ab19b5a941&)

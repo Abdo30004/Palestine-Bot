@@ -89,10 +89,8 @@ let command: Command = {
     if (newsChannel) data.settings.newsChannel = newsChannel.id;
     if (prayChannel) data.settings.prayChannel = prayChannel.id;
 
-    console.log(newsSending, praySending);
-
-    if (newsSending) data.enabled.news = newsSending;
-    if (praySending) data.enabled.pray = praySending;
+    if (newsSending !== data.enabled.news) data.enabled.news = newsSending;
+    if (praySending !== data.enabled.pray) data.enabled.pray = praySending;
     if (language === "ar" || language === "en")
       data.settings.language = language;
     await data.save();
@@ -105,32 +103,28 @@ let command: Command = {
             fields: [
               {
                 name: "News Channel",
-                value: newsChannel
-                  ? `<#${newsChannel.id}>`
+                value: data.settings.newsChannel
+                  ? `<#${data.settings.newsChannel}>`
                   : "Not set, please set it using `/setup`",
               },
               {
                 name: "News Sending",
-                value: newsSending ? "On" : "Off",
+                value: data.enabled.news ? "On" : "Off",
               },
 
               {
                 name: "Pray Channel",
-                value: prayChannel
-                  ? `<#${prayChannel.id}>`
+                value: data.settings.newsChannel
+                  ? `<#${data.settings.newsChannel}>`
                   : "Not set, please set it using `/setup`",
               },
               {
                 name: "Pray Sending",
-                value: praySending ? "On" : "Off",
+                value: data.enabled.pray ? "On" : "Off",
               },
               {
                 name: "Language",
-                value: language
-                  ? language === "en"
-                    ? "English 🇬🇧"
-                    : "Arabic 🇵🇸"
-                  : "Not set, please set it using `/setup`",
+                value: data.settings.language,
               },
             ],
           })

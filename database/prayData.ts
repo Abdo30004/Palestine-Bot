@@ -191,7 +191,7 @@ let Data = {
   ],
 
   pictures: [
-    "https://cdn.discordapp.com/attachments/1037330530649243678/1157642787085369354/1-632477e69ebdc6a8e27cacaa37d10bc6.png?ex=654f67dc&is=653cf2dc&hm=5ff739c1844514bd57ab7c72997102372d6c900aa23f7d97118bd8348f7b5861&",
+    "https://media.discordapp.net/attachments/1169355736510378094/1170404608724697209/image.png?ex=6558eb3b&is=6546763b&hm=07103cbe8e04e45f93bc3c9f22d73a567c5440efa598c2d9e660cb437ddc87f8&=&width=763&height=473",
   ],
 };
 

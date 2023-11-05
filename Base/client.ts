@@ -142,7 +142,7 @@ class Client extends DiscordClient {
     if (!this.tlClient) return false;
     this.tlClient.addEventHandler(async (event: NewMessageEvent) => {
       let message = event.message;
-
+      console.log("message");
       if (!message) return;
 
       let sender = await message.getSender().catch((err) => null);
@@ -150,7 +150,7 @@ class Client extends DiscordClient {
       if (!sender) return console.log("no sender");
 
       if (!("username" in sender)) return;
-
+      console.log("username");
       let language: "ar" | "en" =
         sender.username === "qassambrigades" ? "ar" : "en";
 
@@ -175,9 +175,8 @@ class Client extends DiscordClient {
         },
         date: new Date(message.date * 1000),
       };
-
-      this.events.emit("news", [article], language);
-    }, new NewMessage({ incoming: true, fromUsers: ["qassambrigades", "qassambrigadeseng", "yahiaouiabderrahamne"] }));
+      this.events.emit("news", [article], language,"tl");
+    }, new NewMessage({ incoming: true, fromUsers: ["qassambrigades", "qassambrigadeseng"] }));
     return true;
   }
 

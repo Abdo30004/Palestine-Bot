@@ -1,8 +1,7 @@
 import { Event } from "../interfaces/event";
 import { Article } from "../interfaces/article";
 import { Util } from "../Util/util";
-
-
+import { message } from "telegram/client";
 
 let event: Event = {
   name: "news",
@@ -15,7 +14,9 @@ let event: Event = {
       (c) => c.settings.language === lang && c.enabled.news
     )) {
       let guild = client.guilds.cache.get(guildSettings._id);
+
       if (!guild) continue;
+
       let newsChannel = guild.channels.cache.get(
         guildSettings.settings.newsChannel
       );
@@ -25,6 +26,7 @@ let event: Event = {
         return check;
       });
 
+
       if (!newsToSend.length || !newsChannel || newsChannel.type) continue;
 
       for (let i = 0; i < newsToSend.length; i++) {
@@ -32,7 +34,7 @@ let event: Event = {
 
         guildSettings.sentNews.push(newsToSend[i].id);
         i++;
-        await Util.wait(1000);
+        await Util.wait(5 * 1000);
       }
       await Util.wait(1000);
     }
