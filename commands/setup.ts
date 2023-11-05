@@ -88,8 +88,8 @@ let command: Command = {
     if (newsChannel) data.settings.newsChannel = newsChannel.id;
     if (prayChannel) data.settings.prayChannel = prayChannel.id;
 
-    if (newsSending !== data.enabled.news) data.enabled.news = newsSending;
-    if (praySending !== data.enabled.pray) data.enabled.pray = praySending;
+    if (newsSending !== data.enabled.news) data.enabled.news =newsChannel? true: newsSending;
+    if (praySending !== data.enabled.pray) data.enabled.pray =prayChannel? true: praySending;
     if (language === "ar" || language === "en")
       data.settings.language = language;
     await data.save();
@@ -113,8 +113,8 @@ let command: Command = {
 
               {
                 name: "Pray Channel",
-                value: data.settings.newsChannel
-                  ? `<#${data.settings.newsChannel}>`
+                value: data.settings.prayChannel
+                  ? `<#${data.settings.prayChannel}>`
                   : "Not set, please set it using `/setup`",
               },
               {
