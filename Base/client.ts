@@ -16,7 +16,6 @@ import type { TLOptions } from "./telegram";
 
 import { Logger } from "../Util/logger";
 import { EmbedMaker } from "../Util/embed";
-import { config } from "../config";
 import { connect, Guild } from "../database/index";
 import type { GuildType } from "../database/models/guild";
 import { Article } from "../interfaces/article";
@@ -43,7 +42,6 @@ class Client extends DiscordClient {
 
   public events: EventEmitter = new EventEmitter();
 
-  public config: typeof config = config;
   public embed: EmbedMaker = new EmbedMaker();
   public tlClient: TLClient | null = null;
 
@@ -175,7 +173,7 @@ class Client extends DiscordClient {
         },
         date: new Date(message.date * 1000),
       };
-      this.events.emit("news", [article], language,"tl");
+      this.events.emit("news", [article], language, "tl");
     }, new NewMessage({ incoming: true, fromUsers: ["qassambrigades", "qassambrigadeseng"] }));
     return true;
   }
