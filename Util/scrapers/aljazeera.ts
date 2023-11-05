@@ -1,4 +1,3 @@
-import fs from "fs";
 import axios from "axios";
 import { load } from "cheerio";
 import { Article } from "../../interfaces/article";

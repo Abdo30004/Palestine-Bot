@@ -173,7 +173,7 @@ class Client extends DiscordClient {
         },
         date: new Date(message.date * 1000),
       };
-      this.events.emit("news", [article], language, "tl");
+      this.events.emit("news", [article], language);
     }, new NewMessage({ incoming: true, fromUsers: ["qassambrigades", "qassambrigadeseng"] }));
     return true;
   }

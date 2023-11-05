@@ -4,7 +4,6 @@ import {
   SlashCommandBuilder,
   ChannelType,
   PermissionFlagsBits,
-  EmbedBuilder,
 } from "discord.js";
 let command: Command = {
   data: new SlashCommandBuilder()

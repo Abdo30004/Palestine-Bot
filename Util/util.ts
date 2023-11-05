@@ -7,7 +7,6 @@ import {
   Colors,
 } from "discord.js";
 import axios from "axios";
-import { message } from "telegram/client";
 class Util {
   static title(str: string) {
     if (str === null || str === "") return "";

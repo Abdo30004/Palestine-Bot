@@ -1,7 +1,6 @@
 import { Event } from "../interfaces/event";
 import { Article } from "../interfaces/article";
 import { Util } from "../Util/util";
-import { message } from "telegram/client";
 
 let event: Event = {
   name: "news",

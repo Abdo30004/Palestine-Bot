@@ -1,10 +1,6 @@
 import { GatewayIntentBits, Partials } from "discord.js";
 import { Client } from "./Base/client";
-
-import { TLClient } from "./Base/telegram";
-
 import { config } from "dotenv";
-import { NewMessageEvent } from "telegram/events";
 
 config();
 
